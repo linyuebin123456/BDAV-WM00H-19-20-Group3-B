@@ -1,0 +1,34 @@
+from sklearn.cluster import MiniBatchKMeans
+import numpy as np
+import matplotlib.pyplot as plt
+import csv
+
+def loadCSVfile1():
+    global data
+    list_file = []
+    with open('Customers1.csv','r') as csv_file:  
+        all_lines=csv.reader(csv_file)  
+        for one_line in all_lines:  
+            list_file.append(one_line)  
+    list_file.remove(list_file[0])
+    arr_file = np.array(list_file)
+    data = arr_file[:, 0:]
+    return data 
+    
+    
+model = MiniBatchKMeans(n_clusters=3)
+model.fit(data)
+centers = model.cluster_centers_
+print(centers)
+result = model.predict(data)
+print(result)
+mark = ['or', 'ob', 'og']
+for i,d in enumerate(data):
+    plt.plot(d[0], d[1], mark[result[i]])
+
+mark = ['*r', '*b', '*g']
+for i,center in enumerate(centers):
+    plt.plot(center[0],center[1], mark[i], markersize=20)
+    
+plt.show()
+
