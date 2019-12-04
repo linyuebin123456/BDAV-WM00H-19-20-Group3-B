@@ -1,0 +1,26 @@
+import pandas as pd
+from sklearn import preprocessing
+import numpy as np
+scale = True
+import csv
+from sklearn import decomposition
+
+dataset = open(r'moble_devices.csv', 'r')
+reader = csv.reader(dataset)
+headers = reader.__next__()
+print(headers)
+
+print(loadCSVfile1())
+
+if scale == True:
+    data = preprocessing.scale(data)
+print(data)
+
+pca = decomposition.PCA()
+pca.fit(data)
+
+pca = decomposition.PCA(n_components=2)
+pca.fit(data)
+pca.explained_variance_ratio_
+
+pca.explained_variance_
