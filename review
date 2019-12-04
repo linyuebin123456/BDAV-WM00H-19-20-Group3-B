@@ -1,0 +1,33 @@
+setwd("C:/Users/metl008/Desktop/SImOut")
+data <- read.csv("Complaint.csv", header=TRUE)
+myText = data$text
+myContinuousValue = 'rating'
+k = 20
+customStopWords = c("said","told","called","bonnets","broadband","service","internet","get","done","one","will","just","can","now","dont")
+
+packages <- c("stm", "Rtsne", "geometry", "RColorBrewer", "tm", "wordcloud")
+new.packages <- packages[!(packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+library(stm)
+library(Rtsne)
+library(geometry)
+library(RColorBrewer)
+library(tm)
+library(wordcloud)
+
+processed <- textProcessor(documents=myText, metadata = data, customstopwords = customStopWords, stem = FALSE, striphtml = TRUE)
+out <- prepDocuments(processed$documents, processed$vocab, processed$meta)
+docs <- out$documents
+vocab <- out$vocab
+meta <-out$meta
+
+result <- stm(docs, vocab, K = k, prevalence=~ s(eval(as.name(myContinuousValue))), init.type = "LDA", data=meta)
+plot(result)
+labelTopics(result, topics = NULL, n = 7, frexweight = 0.5)
+
+pdf("Complaints1.pdf")
+for (i in 1:k){
+  cloud(result, topic = i, max.words = 50, random.color = TRUE, colors = brewer.pal(6,"Dark2"))
+  title(paste("Topic ", i))
+}
+dev.off() 
