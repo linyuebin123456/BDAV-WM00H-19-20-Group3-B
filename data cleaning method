@@ -1,0 +1,23 @@
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+
+
+dataset=pd.read_csv('Customers.csv')
+dataset.shape
+dataset.head()
+np.random.seed(0) 
+missing_values_count = dataset.isnull().sum()
+print(missing_values_count)
+
+
+numeric_cols = dataset.columns[dataset.dtypes != 'object']
+numeric_cols
+
+mean_cols = dataset.mean()
+mean_cols.head()
+dataset = dataset.fillna(mean_cols)
+
+missing_values_count = dataset.isnull().sum()
+print(missing_values_count)
+dataset.to_csv('Customers.csv')
